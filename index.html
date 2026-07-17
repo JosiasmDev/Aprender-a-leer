@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Aprendo a leer</title>
+<style>
+  :root{
+    --cream:#FFF9EC;
+    --ink:#3A3042;
+    --coral:#FF8552;
+    --coral-dark:#E06A3C;
+    --teal:#3DAFA5;
+    --teal-dark:#2C8A81;
+    --purple:#8E5DC9;
+    --purple-dark:#6E43A6;
+    --yellow:#FFC93F;
+    --yellow-dark:#E0AC1E;
+    --pink:#FF6B9D;
+    --pink-dark:#E14E80;
+    --green:#52B788;
+    --green-dark:#3A9C6C;
+    --white:#FFFFFF;
+    --grey:#C9C2D6;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Baloo 2','Segoe UI Rounded','SF Pro Rounded','Comic Sans MS',system-ui,sans-serif;
+    overscroll-behavior:none;
+    -webkit-user-select:none;user-select:none;
+  }
+  body{
+    background-image:
+      radial-gradient(circle at 10% 15%, rgba(255,201,63,0.25) 0, transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(61,175,165,0.2) 0, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(142,93,201,0.18) 0, transparent 40%),
+      radial-gradient(circle at 5% 90%, rgba(255,107,157,0.18) 0, transparent 40%);
+  }
+  h1,h2,h3{font-weight:800;margin:0;letter-spacing:0.5px;}
+  #app{max-width:640px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:24px;}
+  .screen{display:none;padding:20px 18px 40px;animation:fadeIn .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---------- Buttons (huggable rubber style) ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:none;border-radius:20px;
+    padding:16px 26px;
+    font-family:inherit;font-weight:800;font-size:1.1rem;
+    color:var(--white);
+    cursor:pointer;
+    box-shadow:0 6px 0 rgba(0,0,0,0.18);
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .btn:active{transform:translateY(6px);box-shadow:0 0 0 rgba(0,0,0,0.18);}
+  .btn-coral{background:var(--coral);box-shadow:0 6px 0 var(--coral-dark);}
+  .btn-coral:active{box-shadow:0 0 0 var(--coral-dark);}
+  .btn-teal{background:var(--teal);box-shadow:0 6px 0 var(--teal-dark);}
+  .btn-teal:active{box-shadow:0 0 0 var(--teal-dark);}
+  .btn-purple{background:var(--purple);box-shadow:0 6px 0 var(--purple-dark);}
+  .btn-purple:active{box-shadow:0 0 0 var(--purple-dark);}
+  .btn-yellow{background:var(--yellow);color:var(--ink);box-shadow:0 6px 0 var(--yellow-dark);}
+  .btn-yellow:active{box-shadow:0 0 0 var(--yellow-dark);}
+  .btn-outline{background:var(--white);color:var(--ink);box-shadow:0 6px 0 var(--grey);}
+  .btn-outline:active{box-shadow:0 0 0 var(--grey);}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5;cursor:default;}
+  .btn-round{border-radius:50%;width:64px;height:64px;padding:0;font-size:1.6rem;}
+
+  /* ---------- Name screen ---------- */
+  #screen-name{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:92vh;text-align:center;}
+  .mascot{font-size:5.5rem;line-height:1;margin-bottom:6px;animation:bob 2.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-10px) rotate(2deg);}}
+  #screen-name h1{font-size:1.9rem;color:var(--coral);margin-bottom:6px;}
+  #screen-name p{color:#6b6178;font-size:1.05rem;margin:0 0 22px;}
+  .name-input{
+    width:100%;max-width:320px;
+    padding:16px 20px;border-radius:18px;border:3px solid var(--grey);
+    font-family:inherit;font-size:1.3rem;text-align:center;font-weight:700;
+    color:var(--ink);background:var(--white);margin-bottom:20px;
+  }
+  .name-input:focus{outline:none;border-color:var(--teal);}
+
+  /* ---------- Map screen ---------- */
+  .map-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .greeting{font-size:1.5rem;color:var(--coral);}
+  .greeting span{display:block;font-size:0.95rem;color:#8a8195;font-weight:600;}
+  .stars-total{
+    display:flex;align-items:center;gap:6px;background:var(--white);
+    padding:8px 14px;border-radius:16px;box-shadow:0 3px 0 var(--grey);
+    font-weight:800;color:var(--yellow-dark);font-size:1.05rem;
+  }
+  .gear-btn{
+    background:var(--white);border:none;border-radius:14px;width:44px;height:44px;
+    font-size:1.3rem;box-shadow:0 3px 0 var(--grey);cursor:pointer;
+  }
+  .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+
+  .path{position:relative;padding:20px 10px 10px;}
+  .path::before{
+    content:"";position:absolute;top:10px;bottom:10px;left:50%;
+    width:6px;margin-left:-3px;
+    background-image:repeating-linear-gradient(to bottom, var(--grey) 0 10px, transparent 10px 20px);
+    border-radius:6px;z-index:0;
+  }
+  .stone-row{position:relative;display:flex;margin-bottom:26px;z-index:1;}
+  .stone-row.left{justify-content:flex-start;}
+  .stone-row.right{justify-content:flex-end;}
+  .stone{
+    width:118px;background:var(--white);border-radius:24px;
+    padding:14px 10px 12px;text-align:center;
+    box-shadow:0 6px 0 var(--grey);
+    cursor:pointer;position:relative;
+  }
+  .stone.unlocked{box-shadow:0 6px 0 var(--coral-dark);background:linear-gradient(160deg,#fff, #fff4ea);}
+  .stone.completed{box-shadow:0 6px 0 var(--green-dark);background:linear-gradient(160deg,#fff, #eafff3);}
+  .stone.locked{opacity:.55;cursor:default;}
+  .stone:active.unlocked, .stone:active.completed{transform:translateY(6px);box-shadow:0 0 0;}
+  .stone-icon{font-size:2.2rem;}
+  .stone-title{font-size:0.8rem;font-weight:800;margin-top:4px;line-height:1.1;min-height:2.1em;}
+  .stone-stars{font-size:0.85rem;color:var(--yellow-dark);margin-top:4px;letter-spacing:1px;}
+  .lock-badge{
+    position:absolute;top:-8px;right:-8px;background:var(--grey);color:#fff;
+    border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+  }
+
+  /* ---------- Level screen ---------- */
+  .level-topbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .back-btn{background:var(--white);border:none;border-radius:14px;width:44px;height:44px;font-size:1.2rem;box-shadow:0 3px 0 var(--grey);cursor:pointer;flex:none;}
+  .level-title{font-size:1.25rem;flex:1;}
+  .level-title span{display:block;font-size:0.8rem;color:#8a8195;font-weight:600;}
+  .progress-track{height:12px;background:var(--white);border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--grey);margin-bottom:18px;}
+  .progress-fill{height:100%;background:var(--teal);border-radius:8px;transition:width .3s ease;}
+
+  .hint-text{text-align:center;color:#6b6178;font-weight:700;margin-bottom:14px;font-size:1.02rem;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(120px,1fr));gap:14px;margin-bottom:20px;}
+  .letter-card{
+    background:var(--white);border-radius:22px;padding:18px 8px 14px;text-align:center;
+    box-shadow:0 5px 0 var(--grey);cursor:pointer;position:relative;
+  }
+  .letter-card.seen{box-shadow:0 5px 0 var(--green-dark);background:#eefff5;}
+  .letter-card:active{transform:translateY(5px);box-shadow:0 0 0;}
+  .letter-big{font-size:2.4rem;font-weight:800;color:var(--coral);}
+  .letter-emoji{font-size:2rem;margin:4px 0;}
+  .letter-word{font-size:0.85rem;font-weight:700;color:#6b6178;}
+  .seen-badge{position:absolute;top:-6px;right:-6px;background:var(--green);color:#fff;border-radius:50%;width:24px;height:24px;font-size:0.8rem;display:flex;align-items:center;justify-content:center;}
+
+  .word-card .letter-big{font-size:1.7rem;}
+  .syll-part{padding:0 2px;border-radius:6px;}
+  .syll-a{color:var(--coral);}
+  .syll-b{color:var(--teal);}
+  .syll-c{color:var(--purple);}
+
+  .sentence-card{grid-column:1/-1;text-align:left;padding:20px;}
+  .sentence-card .letter-big{font-size:1.5rem;line-height:1.5;}
+
+  /* ---------- Game round ---------- */
+  .game-box{background:var(--white);border-radius:26px;padding:26px 18px;text-align:center;box-shadow:0 6px 0 var(--grey);margin-bottom:20px;}
+  .round-counter{font-weight:800;color:#8a8195;font-size:0.9rem;margin-bottom:10px;}
+  .prompt-emoji{font-size:4.5rem;margin:6px 0;}
+  .prompt-text{font-size:1.6rem;font-weight:800;margin:6px 0 14px;color:var(--ink);}
+  .speaker-btn{
+    background:var(--purple);color:#fff;border:none;border-radius:18px;
+    padding:14px 22px;font-size:1.1rem;font-weight:800;box-shadow:0 5px 0 var(--purple-dark);
+    cursor:pointer;margin-bottom:6px;
+  }
+  .speaker-btn:active{transform:translateY(5px);box-shadow:0 0 0;}
+  .question-label{font-weight:700;color:#6b6178;margin:14px 0 10px;}
+  .options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px;}
+  .option-btn{
+    background:var(--cream);border:3px solid var(--grey);border-radius:18px;
+    padding:16px 8px;font-family:inherit;font-size:1.3rem;font-weight:800;color:var(--ink);
+    cursor:pointer;transition:transform .08s ease;
+  }
+  .option-btn:active{transform:scale(0.96);}
+  .option-btn.correct{background:var(--green);border-color:var(--green-dark);color:#fff;}
+  .option-btn.wrong{background:var(--pink);border-color:var(--pink-dark);color:#fff;}
+  .feedback-msg{margin-top:14px;font-weight:800;font-size:1.05rem;min-height:1.4em;}
+  .feedback-msg.good{color:var(--green-dark);}
+  .feedback-msg.bad{color:var(--pink-dark);}
+
+  /* ---------- Summary ---------- */
+  .summary-box{text-align:center;padding:20px 10px;}
+  .summary-stars{font-size:3rem;letter-spacing:6px;margin:14px 0;}
+  .summary-msg{font-size:1.3rem;font-weight:800;color:var(--coral);margin-bottom:6px;}
+  .summary-sub{color:#6b6178;font-weight:600;margin-bottom:24px;}
+  .summary-actions{display:flex;flex-direction:column;gap:12px;max-width:300px;margin:0 auto;}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(58,48,66,0.5);
+    display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;
+  }
+  .modal-overlay.hidden{display:none;}
+  .modal-box{background:#fff;border-radius:24px;padding:24px;max-width:340px;width:100%;text-align:center;}
+  .modal-box h3{margin-bottom:14px;color:var(--coral);}
+  .modal-box p{color:#6b6178;font-weight:600;margin-bottom:18px;font-size:0.95rem;}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;}
+
+  /* ---------- Confetti ---------- */
+  #confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60;}
+  .confetti-piece{
+    position:absolute;top:-20px;width:10px;height:14px;
+    animation-name:fall;animation-timing-function:ease-in;animation-fill-mode:forwards;
+    border-radius:2px;
+  }
+  @keyframes fall{
+    to{transform:translateY(110vh) rotate(360deg);opacity:0.9;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .mascot{animation:none;}
+    .confetti-piece{animation:none;display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== PANTALLA: NOMBRE ===== -->
+  <div id="screen-name" class="screen active">
+    <div class="mascot">🦉</div>
+    <h1>¡Hola! Soy Bubo</h1>
+    <p>Voy a ayudarte a aprender a leer.<br>¿Cómo te llamas?</p>
+    <input type="text" id="name-input" class="name-input" placeholder="Escribe tu nombre" maxlength="18">
+    <button class="btn btn-coral btn-block" id="start-btn" style="max-width:320px;">Empezar a jugar 🚀</button>
+  </div>
+
+  <!-- ===== PANTALLA: MAPA DE NIVELES ===== -->
+  <div id="screen-map" class="screen">
+    <div class="top-row">
+      <div class="greeting" id="map-greeting">¡Hola!<span>Elige un nivel</span></div>
+      <button class="gear-btn" id="gear-btn" title="Ajustes">⚙️</button>
+    </div>
+    <div class="stars-total" id="stars-total" style="margin-bottom:18px;">⭐ 0 estrellas</div>
+    <div class="path" id="path-container"></div>
+  </div>
+
+  <!-- ===== PANTALLA: NIVEL (intro / juego / resumen) ===== -->
+  <div id="screen-level" class="screen">
+    <div class="level-topbar">
+      <button class="back-btn" id="back-btn">←</button>
+      <div class="level-title" id="level-title-box">Nivel<span>Subtítulo</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%;"></div></div>
+    <div id="level-content"></div>
+  </div>
+
+</div>
+
+<div id="confetti-layer"></div>
+
+<div class="modal-overlay hidden" id="settings-modal">
+  <div class="modal-box">
+    <h3>Ajustes ⚙️</h3>
+    <p>Cambia el nombre o borra el progreso guardado en este dispositivo.</p>
+    <div class="modal-actions">
+      <button class="btn btn-teal btn-block" id="change-name-btn">Cambiar nombre</button>
+      <button class="btn btn-purple btn-block" id="repeat-voice-btn">🔊 Probar la voz</button>
+      <button class="btn btn-outline btn-block" id="reset-progress-btn" style="color:#E14E80;">Borrar progreso</button>
+      <button class="btn btn-outline btn-block" id="close-settings-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================== CONTENIDO DE LOS NIVELES ================== */
+  var LEVELS = [
+    {
+      id:1, title:'Las vocales', subtitle:'a e i o u', icon:'🔤',
+      type:'letters',
+      items:[
+        {text:'a', word:'Abeja', emoji:'🐝'},
+        {text:'e', word:'Elefante', emoji:'🐘'},
+        {text:'i', word:'Iglú', emoji:'🧊'},
+        {text:'o', word:'Oso', emoji:'🐻'},
+        {text:'u', word:'Uva', emoji:'🍇'}
+      ]
+    },
+    {
+      id:2, title:'Sílabas con M', subtitle:'ma me mi mo mu', icon:'👩',
+      type:'letters',
+      items:[
+        {text:'ma', word:'Mamá', emoji:'👩'},
+        {text:'me', word:'Mesa', emoji:'🪑'},
+        {text:'mi', word:'Miel', emoji:'🍯'},
+        {text:'mo', word:'Moto', emoji:'🛵'},
+        {text:'mu', word:'Muñeca', emoji:'🪆'}
+      ]
+    },
+    {
+      id:3, title:'Sílabas con P y L', subtitle:'pa pe pi po pu · la le li lo lu', icon:'🦁',
+      type:'letters',
+      items:[
+        {text:'pa', word:'Pato', emoji:'🦆'},
+        {text:'pe', word:'Pelota', emoji:'⚽'},
+        {text:'pi', word:'Piña', emoji:'🍍'},
+        {text:'po', word:'Pollo', emoji:'🐔'},
+        {text:'pu', word:'Puerta', emoji:'🚪'},
+        {text:'la', word:'Lápiz', emoji:'✏️'},
+        {text:'le', word:'León', emoji:'🦁'},
+        {text:'li', word:'Limón', emoji:'🍋'},
+        {text:'lo', word:'Loro', emoji:'🦜'},
+        {text:'lu', word:'Luna', emoji:'🌙'}
+      ]
+    },
+    {
+      id:4, title:'Mis primeras palabras', subtitle:'Leer palabras completas', icon:'📖',
+      type:'words',
+      items:[
+        {text:'mamá', syll:['ma','má'], emoji:'👩'},
+        {text:'pelota', syll:['pe','lo','ta'], emoji:'⚽'},
+        {text:'paloma', syll:['pa','lo','ma'], emoji:'🕊️'},
+        {text:'luna', syll:['lu','na'], emoji:'🌙'},
+        {text:'limón', syll:['li','món'], emoji:'🍋'},
+        {text:'mapa', syll:['ma','pa'], emoji:'🗺️'}
+      ]
+    },
+    {
+      id:5, title:'Mis primeras frases', subtitle:'Leer frases cortas', icon:'🌟',
+      type:'sentences',
+      items:[
+        {text:'Mi mamá me ama.', emoji:'💕'},
+        {text:'La luna sale de noche.', emoji:'🌙'},
+        {text:'El oso come miel.', emoji:'🍯'},
+        {text:'Pepa tiene una pelota.', emoji:'⚽'},
+        {text:'Amo a mi familia.', emoji:'❤️'}
+      ]
+    }
+  ];
+
+  var PRAISE = ['¡Muy bien!','¡Genial!','¡Lo lograste!','¡Estupendo!','¡Eres una estrella!','¡Perfecto!','¡Bravo!'];
+  var ENCOURAGE = ['Casi, inténtalo de nuevo','Prueba otra vez','Tú puedes, inténtalo otra vez','Casi lo tienes'];
+
+  /* ================== ESTADO Y GUARDADO ================== */
+  var STORAGE_KEY = 'lectorAppData_v1';
+  var data = loadData();
+
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return { name:'', levels:{} };
+  }
+  function saveData(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+  }
+  function isUnlocked(levelId){
+    if(levelId === 1) return true;
+    var prev = data.levels[levelId-1];
+    return !!(prev && prev.completed);
+  }
+  function totalStars(){
+    var t = 0;
+    for(var k in data.levels){ t += (data.levels[k].stars || 0); }
+    return t;
+  }
+
+  /* ================== VOZ (Web Speech API) ================== */
+  var voice = null;
+  function pickVoice(){
+    if(!('speechSynthesis' in window)) return null;
+    var voices = window.speechSynthesis.getVoices() || [];
+    var v = voices.find(function(v){ return v.lang === 'es-ES'; });
+    if(!v) v = voices.find(function(v){ return v.lang && v.lang.indexOf('es') === 0; });
+    return v || null;
+  }
+  if('speechSynthesis' in window){
+    voice = pickVoice();
+    window.speechSynthesis.onvoiceschanged = function(){ voice = pickVoice(); };
+  }
+  function speakSequence(parts, rate){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    parts.forEach(function(text){
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-ES';
+      if(voice) u.voice = voice;
+      u.rate = rate || 0.85;
+      u.pitch = 1.15;
+      window.speechSynthesis.speak(u);
+    });
+  }
+  function speak(text, rate){ speakSequence([text], rate); }
+
+  /* ================== SONIDOS DE REFUERZO ================== */
+  var audioCtx = null;
+  function getCtx(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx = null; }
+    }
+    return audioCtx;
+  }
+  function playTone(correct){
+    var ctx = getCtx();
+    if(!ctx) return;
+    try{
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      var t0 = ctx.currentTime;
+      if(correct){
+        o.frequency.setValueAtTime(523.25, t0);
+        o.frequency.setValueAtTime(659.25, t0+0.1);
+        o.frequency.setValueAtTime(783.99, t0+0.2);
+      } else {
+        o.frequency.setValueAtTime(300, t0);
+        o.frequency.setValueAtTime(240, t0+0.15);
+      }
+      g.gain.setValueAtTime(0.16, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0+0.4);
+      o.start(t0); o.stop(t0+0.4);
+    }catch(e){}
+  }
+
+  /* ================== CONFETI ================== */
+  function launchConfetti(){
+    var layer = document.getElementById('confetti-layer');
+    var colors = ['#FF8552','#3DAFA5','#8E5DC9','#FFC93F','#FF6B9D','#52B788'];
+    for(var i=0;i<40;i++){
+      (function(){
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (Math.random()*100) + 'vw';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        var dur = (2 + Math.random()*1.5);
+        el.style.animationDuration = dur + 's';
+        el.style.animationDelay = (Math.random()*0.4) + 's';
+        layer.appendChild(el);
+        setTimeout(function(){ el.remove(); }, (dur+0.6)*1000);
+      })();
+    }
+  }
+
+  /* ================== NAVEGACIÓN DE PANTALLAS ================== */
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  /* ================== PANTALLA: NOMBRE ================== */
+  var nameInput = document.getElementById('name-input');
+  document.getElementById('start-btn').addEventListener('click', function(){
+    var n = nameInput.value.trim();
+    data.name = n || 'Peque';
+    saveData();
+    speak('Hola ' + data.name + '. Vamos a aprender a leer.');
+    renderMap();
+    showScreen('screen-map');
+  });
+
+  /* ================== PANTALLA: MAPA ================== */
+  function renderMap(){
+    document.getElementById('map-greeting').innerHTML =
+      '¡Hola, ' + escapeHtml(data.name) + '! <span>Elige un nivel</span>';
+    document.getElementById('stars-total').textContent = '⭐ ' + totalStars() + ' estrellas';
+
+    var container = document.getElementById('path-container');
+    container.innerHTML = '';
+    LEVELS.forEach(function(level, idx){
+      var unlocked = isUnlocked(level.id);
+      var lvlData = data.levels[level.id] || {stars:0, completed:false};
+      var row = document.createElement('div');
+      row.className = 'stone-row ' + (idx % 2 === 0 ? 'left' : 'right');
+
+      var stone = document.createElement('div');
+      stone.className = 'stone ' + (lvlData.completed ? 'completed' : (unlocked ? 'unlocked' : 'locked'));
+      var starsStr = '★★★'.split('').map(function(_, i){ return i < lvlData.stars ? '★' : '☆'; }).join('');
+      stone.innerHTML =
+        '<div class="stone-icon">' + level.icon + '</div>' +
+        '<div class="stone-title">' + escapeHtml(level.title) + '</div>' +
+        (unlocked ? '<div class="stone-stars">' + starsStr + '</div>' : '') +
+        (!unlocked ? '<div class="lock-badge">🔒</div>' : '');
+
+      if(unlocked){
+        stone.addEventListener('click', function(){ openLevel(level); });
+      }
+      row.appendChild(stone);
+      container.appendChild(row);
+    });
+  }
+
+  document.getElementById('gear-btn').addEventListener('click', function(){
+    document.getElementById('settings-modal').classList.remove('hidden');
+  });
+  document.getElementById('close-settings-btn').addEventListener('click', function(){
+    document.getElementById('settings-modal').classList.add('hidden');
+  });
+  document.getElementById('repeat-voice-btn').addEventListener('click', function(){
+    speak('Hola, soy Bubo. Así sueno cuando leo las letras y las palabras.');
+  });
+  document.getElementById('change-name-btn').addEventListener('click', function(){
+    document.getElementById('settings-modal').classList.add('hidden');
+    nameInput.value = data.name === 'Peque' ? '' : data.name;
+    showScreen('screen-name');
+  });
+  document.getElementById('reset-progress-btn').addEventListener('click', function(){
+    if(confirm('¿Seguro que quieres borrar todo el progreso guardado?')){
+      data.levels = {};
+      saveData();
+      renderMap();
+      document.getElementById('settings-modal').classList.add('hidden');
+    }
+  });
+
+  /* ================== NIVEL: ESTADO EN CURSO ================== */
+  var current = null; // {level, phase, visited(Set), rounds, roundIndex, correctFirstTry}
+
+  function openLevel(level){
+    current = { level: level, phase: 'intro', visited: {}, visitedCount: 0 };
+    document.getElementById('level-title-box').innerHTML =
+      escapeHtml(level.title) + '<span>' + escapeHtml(level.subtitle) + '</span>';
+    setProgress(0);
+    renderIntro();
+    showScreen('screen-level');
+  }
+
+  document.getElementById('back-btn').addEventListener('click', function(){
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+    renderMap();
+    showScreen('screen-map');
+  });
+
+  function setProgress(pct){
+    document.getElementById('progress-fill').style.width = Math.max(0, Math.min(100, pct)) + '%';
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  /* ---------- FASE 1: INTRO (aprender escuchando) ---------- */
+  function renderIntro(){
+    var level = current.level;
+    var box = document.getElementById('level-content');
+    var html = '<div class="hint-text">👆 Toca cada tarjeta para escucharla</div>';
+    html += '<div class="card-grid">';
+
+    level.items.forEach(function(item, i){
+      if(level.type === 'sentences'){
+        html += '<div class="letter-card sentence-card" data-i="' + i + '">' +
+          '<div class="letter-emoji">' + item.emoji + '</div>' +
+          '<div class="letter-big">' + escapeHtml(item.text) + '</div>' +
+          '</div>';
+      } else if(level.type === 'words'){
+        var sylHtml = item.syll.map(function(s, si){
+          var cls = ['syll-a','syll-b','syll-c'][si % 3];
+          return '<span class="syll-part ' + cls + '">' + escapeHtml(s) + '</span>';
+        }).join('');
+        html += '<div class="letter-card word-card" data-i="' + i + '">' +
+          '<div class="letter-emoji">' + item.emoji + '</div>' +
+          '<div class="letter-big">' + sylHtml + '</div>' +
+          '</div>';
+      } else {
+        html += '<div class="letter-card" data-i="' + i + '">' +
+          '<div class="letter-big">' + escapeHtml(item.text) + '</div>' +
+          '<div class="letter-emoji">' + item.emoji + '</div>' +
+          '<div class="letter-word">' + escapeHtml(item.word) + '</div>' +
+          '</div>';
+      }
+    });
+    html += '</div>';
+    html += '<button class="btn btn-coral btn-block" id="to-game-btn">Jugar y practicar 🎮</button>';
+    box.innerHTML = html;
+
+    box.querySelectorAll('.letter-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        var i = parseInt(card.getAttribute('data-i'), 10);
+        var item = level.items[i];
+        if(level.type === 'sentences'){
+          speakSequence([item.text], 0.85);
+        } else if(level.type === 'words'){
+          speakSequence(item.syll.concat([item.text]), 0.85);
+        } else {
+          speakSequence([item.text, item.word], 0.85);
+        }
+        if(!current.visited[i]){
+          current.visited[i] = true;
+          current.visitedCount++;
+          card.classList.add('seen');
+          if(!card.querySelector('.seen-badge')){
+            var badge = document.createElement('div');
+            badge.className = 'seen-badge';
+            badge.textContent = '✓';
+            card.appendChild(badge);
+          }
+          setProgress((current.visitedCount / level.items.length) * 40);
+        }
+      });
+    });
+
+    document.getElementById('to-game-btn').addEventListener('click', function(){
+      startGame();
+    });
+  }
+
+  /* ---------- FASE 2: JUEGO ---------- */
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function startGame(){
+    var level = current.level;
+    current.phase = 'game';
+    current.rounds = shuffle(level.items);
+    current.roundIndex = 0;
+    current.correctFirstTry = 0;
+    renderRound();
+  }
+
+  function renderRound(){
+    var level = current.level;
+    var total = current.rounds.length;
+    var target = current.rounds[current.roundIndex];
+    var box = document.getElementById('level-content');
+
+    setProgress(40 + ((current.roundIndex) / total) * 55);
+
+    var numOptions = level.type === 'letters' && level.items.length > 6 ? 4 : 3;
+    var pool = level.items.filter(function(it){ return it !== target; });
+    var distractors = shuffle(pool).slice(0, Math.min(numOptions - 1, pool.length));
+    var options = shuffle([target].concat(distractors));
+
+    var html = '<div class="game-box">';
+    html += '<div class="round-counter">Ronda ' + (current.roundIndex+1) + ' de ' + total + '</div>';
+
+    if(level.type === 'words'){
+      html += '<div class="prompt-emoji">' + target.emoji + '</div>';
+      html += '<div class="question-label">¿Qué palabra es esta?</div>';
+      html += '<div class="options-grid">';
+      options.forEach(function(opt, i){
+        html += '<button class="option-btn" data-i="' + i + '">' + escapeHtml(opt.text) + '</button>';
+      });
+      html += '</div>';
+    } else if(level.type === 'sentences'){
+      html += '<div class="prompt-text">' + escapeHtml(target.text) + '</div>';
+      html += '<button class="speaker-btn" id="replay-btn">🔊 Escuchar de nuevo</button>';
+      html += '<div class="question-label">¿Qué dibujo va con la frase?</div>';
+      html += '<div class="options-grid">';
+      options.forEach(function(opt, i){
+        html += '<button class="option-btn" data-i="' + i + '" style="font-size:2rem;">' + opt.emoji + '</button>';
+      });
+      html += '</div>';
+    } else {
+      html += '<button class="speaker-btn" id="replay-btn">🔊 Escuchar</button>';
+      html += '<div class="question-label">¿Qué ' + (level.id === 1 ? 'letra' : 'sílaba') + ' escuchaste?</div>';
+      html += '<div class="options-grid">';
+      options.forEach(function(opt, i){
+        html += '<button class="option-btn" data-i="' + i + '">' + escapeHtml(opt.text) + '</button>';
+      });
+      html += '</div>';
+    }
+    html += '<div class="feedback-msg" id="feedback-msg"></div>';
+    html += '</div>';
+    box.innerHTML = html;
+
+    var firstTry = true;
+    var answered = false;
+
+    function playPrompt(){
+      if(level.type === 'words'){
+        speakSequence(target.syll.concat([target.text]), 0.85);
+      } else if(level.type === 'sentences'){
+        speakSequence([target.text], 0.85);
+      } else {
+        speakSequence([target.text], 0.85);
+      }
+    }
+    // Reproduce automáticamente el sonido/pregunta al iniciar la ronda
+    setTimeout(playPrompt, 250);
+
+    var replayBtn = document.getElementById('replay-btn');
+    if(replayBtn) replayBtn.addEventListener('click', playPrompt);
+
+    box.querySelectorAll('.option-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(answered) return;
+        var i = parseInt(btn.getAttribute('data-i'), 10);
+        var chosen = options[i];
+        var fb = document.getElementById('feedback-msg');
+        if(chosen === target){
+          answered = true;
+          btn.classList.add('correct');
+          playTone(true);
+          var msg = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+          fb.textContent = msg;
+          fb.className = 'feedback-msg good';
+          speak(msg, 1.0);
+          if(firstTry) current.correctFirstTry++;
+          setTimeout(function(){
+            current.roundIndex++;
+            if(current.roundIndex >= total){
+              finishLevel();
+            } else {
+              renderRound();
+            }
+          }, 1100);
+        } else {
+          firstTry = false;
+          btn.classList.add('wrong');
+          playTone(false);
+          var em = ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)];
+          fb.textContent = em;
+          fb.className = 'feedback-msg bad';
+          setTimeout(function(){ btn.classList.remove('wrong'); }, 500);
+        }
+      });
+    });
+  }
+
+  /* ---------- FASE 3: RESUMEN ---------- */
+  function finishLevel(){
+    var level = current.level;
+    var total = current.rounds.length;
+    var ratio = current.correctFirstTry / total;
+    var stars = 1;
+    if(ratio >= 0.9) stars = 3;
+    else if(ratio >= 0.65) stars = 2;
+    else stars = 1;
+
+    var prev = data.levels[level.id] || {stars:0, completed:false};
+    data.levels[level.id] = {
+      stars: Math.max(prev.stars, stars),
+      completed: true
+    };
+    saveData();
+    setProgress(100);
+
+    var justUnlockedNext = level.id < LEVELS.length && !isUnlockedBefore(level.id+1);
+
+    launchConfetti();
+    var starsStr = '★★★'.split('').map(function(_, i){ return i < stars ? '★' : '☆'; }).join('');
+    var box = document.getElementById('level-content');
+    var praiseMsg = '¡' + data.name + ', lo has conseguido!';
+    box.innerHTML =
+      '<div class="game-box summary-box">' +
+      '<div style="font-size:3.2rem;">🎉</div>' +
+      '<div class="summary-stars">' + starsStr + '</div>' +
+      '<div class="summary-msg">' + escapeHtml(praiseMsg) + '</div>' +
+      '<div class="summary-sub">Has terminado "' + escapeHtml(level.title) + '"</div>' +
+      '<div class="summary-actions">' +
+      (level.id < LEVELS.length ? '<button class="btn btn-teal btn-block" id="next-level-btn">Siguiente nivel →</button>' : '') +
+      '<button class="btn btn-purple btn-block" id="repeat-level-btn">Repetir nivel 🔁</button>' +
+      '<button class="btn btn-outline btn-block" id="map-btn">Volver al mapa 🗺️</button>' +
+      '</div></div>';
+
+    speak(praiseMsg + ' Has ganado ' + stars + (stars===1?' estrella.':' estrellas.'), 0.95);
+
+    var nextBtn = document.getElementById('next-level-btn');
+    if(nextBtn){
+      nextBtn.addEventListener('click', function(){
+        openLevel(LEVELS[level.id]); // LEVELS is 0-indexed, level.id is 1-indexed -> next level
+      });
+    }
+    document.getElementById('repeat-level-btn').addEventListener('click', function(){
+      openLevel(level);
+    });
+    document.getElementById('map-btn').addEventListener('click', function(){
+      renderMap();
+      showScreen('screen-map');
+    });
+  }
+
+  function isUnlockedBefore(levelId){
+    // usado solo informativamente antes de guardar; no crítico
+    return true;
+  }
+
+  /* ================== INICIO DE LA APP ================== */
+  function init(){
+    if(data.name){
+      renderMap();
+      showScreen('screen-map');
+    } else {
+      showScreen('screen-name');
+    }
+  }
+  init();
+
+})();
+</script>
+</body>
+</html>
