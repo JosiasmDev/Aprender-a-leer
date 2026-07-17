@@ -420,4 +420,574 @@
       {text:'vi', word:'Violín', emoji:'🎻'},
       {text:'vo', word:'Volcán', emoji:'🌋'}
     ]},
-    { id:16, title:'Sílabas con Y', subtitle:'ya ye yo', icon:'
+    { id:16, title:'Sílabas con Y', subtitle:'ya ye yo', icon:'⛵', type:'letters', items:[
+      {text:'ya', word:'Yate', emoji:'⛵'},
+      {text:'ye', word:'Yeso', emoji:'🩹'},
+      {text:'yo', word:'Yogur', emoji:'🍦'}
+    ]},
+    { id:17, title:'Sílabas con CH', subtitle:'cha chi cho chu', icon:'🍫', type:'letters', items:[
+      {text:'cha', word:'Chaleco', emoji:'🦺'},
+      {text:'chi', word:'Chicle', emoji:'🍬'},
+      {text:'cho', word:'Chocolate', emoji:'🍫'},
+      {text:'chu', word:'Chupete', emoji:'🍼'}
+    ]},
+    { id:18, title:'Sílabas con LL', subtitle:'lla llo llu', icon:'🔑', type:'letters', items:[
+      {text:'lla', word:'Llave', emoji:'🔑'},
+      {text:'llo', word:'Pollo', emoji:'🐔'},
+      {text:'llu', word:'Lluvia', emoji:'🌧️'}
+    ]},
+    { id:19, title:'Sílabas con Ñ', subtitle:'ño ñu', icon:'🛁', type:'letters', items:[
+      {text:'ño', word:'Baño', emoji:'🛁'},
+      {text:'ñu', word:'Ñu', emoji:'🐃'}
+    ]},
+    { id:20, title:'Sílabas con Z', subtitle:'za zo zu', icon:'👟', type:'letters', items:[
+      {text:'za', word:'Zapato', emoji:'👟'},
+      {text:'zo', word:'Zorro', emoji:'🦊'},
+      {text:'zu', word:'Zumo', emoji:'🧃'}
+    ]},
+    { id:21, title:'Sílabas con H', subtitle:'ha he hi ho hu', icon:'🧚', type:'letters', items:[
+      {text:'ha', word:'Hada', emoji:'🧚'},
+      {text:'he', word:'Helado', emoji:'🍦'},
+      {text:'hi', word:'Hipopótamo', emoji:'🦛'},
+      {text:'ho', word:'Hormiga', emoji:'🐜'},
+      {text:'hu', word:'Huevo', emoji:'🥚'}
+    ]},
+    { id:22, title:'Mis primeras palabras', subtitle:'Leer palabras completas', icon:'📖', type:'words', items:[
+      {text:'mamá', syll:['ma','má'], emoji:'👩'},
+      {text:'pelota', syll:['pe','lo','ta'], emoji:'⚽'},
+      {text:'paloma', syll:['pa','lo','ma'], emoji:'🕊️'},
+      {text:'luna', syll:['lu','na'], emoji:'🌙'},
+      {text:'limón', syll:['li','món'], emoji:'🍋'},
+      {text:'mapa', syll:['ma','pa'], emoji:'🗺️'},
+      {text:'sapo', syll:['sa','po'], emoji:'🐸'},
+      {text:'tomate', syll:['to','ma','te'], emoji:'🍅'},
+      {text:'dedo', syll:['de','do'], emoji:'👆'},
+      {text:'nido', syll:['ni','do'], emoji:'🪺'},
+      {text:'casa', syll:['ca','sa'], emoji:'🏠'},
+      {text:'bota', syll:['bo','ta'], emoji:'🥾'},
+      {text:'foca', syll:['fo','ca'], emoji:'🦭'},
+      {text:'gato', syll:['ga','to'], emoji:'🐱'},
+      {text:'jabón', syll:['ja','bón'], emoji:'🧼'},
+      {text:'vaca', syll:['va','ca'], emoji:'🐄'},
+      {text:'yogur', syll:['yo','gur'], emoji:'🍦'},
+      {text:'chocolate', syll:['cho','co','la','te'], emoji:'🍫'},
+      {text:'llave', syll:['lla','ve'], emoji:'🔑'},
+      {text:'zapato', syll:['za','pa','to'], emoji:'👟'}
+    ]},
+    { id:23, title:'Mis primeras frases', subtitle:'Leer frases cortas', icon:'🌟', type:'sentences', items:[
+      {text:'Mi mamá me ama.', emoji:'💕'},
+      {text:'La luna sale de noche.', emoji:'🌙'},
+      {text:'El oso come miel.', emoji:'🍯'},
+      {text:'Pepa tiene una pelota.', emoji:'⚽'},
+      {text:'Amo a mi familia.', emoji:'❤️'},
+      {text:'El gato duerme en el sofá.', emoji:'🐱'},
+      {text:'La vaca da leche.', emoji:'🐄'},
+      {text:'Voy a jugar al jardín.', emoji:'🌳'},
+      {text:'Mi papá lava el carro.', emoji:'🚗'},
+      {text:'Comemos sopa caliente.', emoji:'🍲'}
+    ]}
+  ];
+
+  /* Agrupación en "mundos" para un camino más bonito y ordenado */
+  var WORLDS = [
+    { key:'w1', title:'Mundo de las vocales', subtitle:'El primer paso de la aventura', icon:'🌈', from:1, to:1, deco:['☁️','✨','🌤️'] },
+    { key:'w2', title:'Bosque de las sílabas fáciles', subtitle:'M · P · L · S · T · D · N', icon:'🌳', from:2, to:8, deco:['🍃','🌿','🦋','🌸'] },
+    { key:'w3', title:'Montaña de las sílabas', subtitle:'C · B · F · G · J · R · V · Y · CH · LL · Ñ · Z · H', icon:'⛰️', from:9, to:21, deco:['⭐','💎','🪨','✨'] },
+    { key:'w4', title:'Castillo de las palabras', subtitle:'Palabras y frases completas', icon:'🏰', from:22, to:23, deco:['👑','🎉','🌟'] }
+  ];
+
+  var PRAISE = ['¡Muy bien!','¡Genial!','¡Lo lograste!','¡Estupendo!','¡Eres una estrella!','¡Perfecto!','¡Bravo!'];
+  var ENCOURAGE = ['Casi, inténtalo de nuevo','Prueba otra vez','Tú puedes, inténtalo otra vez','Casi lo tienes'];
+
+  /* ================== ESTADO Y GUARDADO ================== */
+  var STORAGE_KEY = 'lectorAppData_v1';
+  var data = loadData();
+
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return { name:'', levels:{} };
+  }
+  function saveData(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+  }
+  function isUnlocked(levelId){
+    if(levelId === 1) return true;
+    var prev = data.levels[levelId-1];
+    return !!(prev && prev.completed);
+  }
+  function isNextUp(levelId){
+    if(!isUnlocked(levelId)) return false;
+    var cur = data.levels[levelId];
+    if(cur && cur.completed) return false;
+    if(levelId === 1) return true;
+    var prev = data.levels[levelId-1];
+    return !!(prev && prev.completed);
+  }
+  function totalStars(){
+    var t = 0;
+    for(var k in data.levels){ t += (data.levels[k].stars || 0); }
+    return t;
+  }
+  function getLevel(id){
+    for(var i=0;i<LEVELS.length;i++){ if(LEVELS[i].id === id) return LEVELS[i]; }
+    return null;
+  }
+
+  /* ================== VOZ (Web Speech API) ================== */
+  var voice = null;
+  function pickVoice(){
+    if(!('speechSynthesis' in window)) return null;
+    var voices = window.speechSynthesis.getVoices() || [];
+    var v = voices.find(function(v){ return v.lang === 'es-ES'; });
+    if(!v) v = voices.find(function(v){ return v.lang && v.lang.indexOf('es') === 0; });
+    return v || null;
+  }
+  if('speechSynthesis' in window){
+    voice = pickVoice();
+    window.speechSynthesis.onvoiceschanged = function(){ voice = pickVoice(); };
+  }
+  function speakSequence(parts, rate){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    parts.forEach(function(text){
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-ES';
+      if(voice) u.voice = voice;
+      u.rate = rate || 0.85;
+      u.pitch = 1.15;
+      window.speechSynthesis.speak(u);
+    });
+  }
+  function speak(text, rate){ speakSequence([text], rate); }
+
+  /* ================== SONIDOS DE REFUERZO ================== */
+  var audioCtx = null;
+  function getCtx(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ audioCtx = null; }
+    }
+    return audioCtx;
+  }
+  function playTone(correct){
+    var ctx = getCtx();
+    if(!ctx) return;
+    try{
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      var t0 = ctx.currentTime;
+      if(correct){
+        o.frequency.setValueAtTime(523.25, t0);
+        o.frequency.setValueAtTime(659.25, t0+0.1);
+        o.frequency.setValueAtTime(783.99, t0+0.2);
+      } else {
+        o.frequency.setValueAtTime(300, t0);
+        o.frequency.setValueAtTime(240, t0+0.15);
+      }
+      g.gain.setValueAtTime(0.16, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0+0.4);
+      o.start(t0); o.stop(t0+0.4);
+    }catch(e){}
+  }
+
+  /* ================== CONFETI ================== */
+  function launchConfetti(){
+    var layer = document.getElementById('confetti-layer');
+    var colors = ['#FF8552','#3DAFA5','#8E5DC9','#FFC93F','#FF6B9D','#52B788'];
+    for(var i=0;i<40;i++){
+      (function(){
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (Math.random()*100) + 'vw';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        var dur = (2 + Math.random()*1.5);
+        el.style.animationDuration = dur + 's';
+        el.style.animationDelay = (Math.random()*0.4) + 's';
+        layer.appendChild(el);
+        setTimeout(function(){ el.remove(); }, (dur+0.6)*1000);
+      })();
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t = a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  /* ================== NAVEGACIÓN DE PANTALLAS ================== */
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  /* ================== PANTALLA: NOMBRE ================== */
+  var nameInput = document.getElementById('name-input');
+  document.getElementById('start-btn').addEventListener('click', function(){
+    var n = nameInput.value.trim();
+    data.name = n || 'Peque';
+    saveData();
+    speak('Hola ' + data.name + '. Vamos a aprender a leer.');
+    renderMap();
+    showScreen('screen-map');
+  });
+
+  /* ================== PANTALLA: MAPA ================== */
+  function renderMap(){
+    document.getElementById('map-greeting').innerHTML =
+      '¡Hola, ' + escapeHtml(data.name) + '! <span>Elige un nivel</span>';
+    document.getElementById('stars-total').textContent = '⭐ ' + totalStars() + ' estrellas';
+
+    var container = document.getElementById('path-container');
+    container.innerHTML = '';
+
+    WORLDS.forEach(function(world){
+      var block = document.createElement('div');
+      block.className = 'world-block ' + world.key.replace('w','world-');
+
+      var banner = document.createElement('div');
+      banner.className = 'world-banner';
+      banner.innerHTML =
+        '<div class="w-icon">' + world.icon + '</div>' +
+        '<div class="w-text">' +
+          '<div class="w-title">' + escapeHtml(world.title) + '</div>' +
+          '<div class="w-sub">' + escapeHtml(world.subtitle) + '</div>' +
+        '</div>';
+      block.appendChild(banner);
+
+      var trail = document.createElement('div');
+      trail.className = 'trail';
+
+      var levelsInWorld = LEVELS.filter(function(l){ return l.id >= world.from && l.id <= world.to; });
+      levelsInWorld.forEach(function(level, idx){
+        var row = document.createElement('div');
+        row.className = 'stone-row ' + (idx % 2 === 0 ? 'left' : 'right');
+
+        var unlocked = isUnlocked(level.id);
+        var record = data.levels[level.id];
+        var completed = !!(record && record.completed);
+        var stars = (record && record.stars) || 0;
+        var nextUp = isNextUp(level.id);
+
+        var stone = document.createElement('div');
+        stone.className = 'stone ' + (completed ? 'completed' : (unlocked ? 'unlocked' : 'locked'));
+        var starsStr = completed ? ('★★★'.slice(0,stars) + '☆☆☆'.slice(0, 3-stars)) : '';
+        stone.innerHTML =
+          (nextUp ? '<div class="current-badge">¡Aquí! 👉</div>' : '') +
+          '<div class="stone-icon">' + level.icon + '</div>' +
+          '<div class="stone-title">' + escapeHtml(level.title) + '</div>' +
+          (completed ? '<div class="stone-stars">' + starsStr + '</div>' : '') +
+          (!unlocked ? '<div class="lock-badge">🔒</div>' : '');
+
+        if(unlocked){
+          stone.addEventListener('click', function(){ openLevel(level.id); });
+        }
+        row.appendChild(stone);
+        trail.appendChild(row);
+
+        // decoraciones ocasionales entre piedras
+        if(idx < levelsInWorld.length - 1 && world.deco && world.deco.length){
+          var dRow = document.createElement('div');
+          dRow.style.textAlign = idx % 2 === 0 ? 'right' : 'left';
+          dRow.style.fontSize = '1.3rem';
+          dRow.style.margin = '-14px 26px 4px';
+          dRow.style.opacity = '0.7';
+          dRow.textContent = world.deco[idx % world.deco.length];
+          trail.appendChild(dRow);
+        }
+      });
+
+      block.appendChild(trail);
+      container.appendChild(block);
+    });
+
+    var flag = document.createElement('div');
+    flag.className = 'finish-flag';
+    var allDone = LEVELS.every(function(l){ return data.levels[l.id] && data.levels[l.id].completed; });
+    flag.textContent = allDone ? '🏆 ¡Completaste todo el mapa!' : '🏁';
+    container.appendChild(flag);
+  }
+
+  /* ================== PANTALLA DE NIVEL ================== */
+  var currentLevel = null;
+  var introSeen = {};
+  var gameState = null;
+
+  function openLevel(id){
+    currentLevel = getLevel(id);
+    introSeen = {};
+    gameState = null;
+    renderIntro();
+    showScreen('screen-level');
+  }
+
+  document.getElementById('back-btn').addEventListener('click', function(){
+    if(('speechSynthesis' in window)) window.speechSynthesis.cancel();
+    renderMap();
+    showScreen('screen-map');
+  });
+
+  function setLevelHeader(subtitleText, progressPct){
+    document.getElementById('level-title-box').innerHTML =
+      escapeHtml(currentLevel.icon + '  ' + currentLevel.title) +
+      '<span>' + escapeHtml(subtitleText) + '</span>';
+    document.getElementById('progress-fill').style.width = progressPct + '%';
+  }
+
+  function renderIntro(){
+    setLevelHeader(currentLevel.subtitle, 0);
+    var content = document.getElementById('level-content');
+    var type = currentLevel.type;
+
+    var hint = type === 'letters' ? 'Toca cada tarjeta para escucharla'
+             : type === 'words' ? 'Toca cada palabra para escucharla'
+             : 'Toca cada frase para escucharla';
+
+    var html = '<div class="hint-text">' + hint + '</div><div class="card-grid" id="intro-grid">';
+
+    currentLevel.items.forEach(function(item, i){
+      if(type === 'letters'){
+        html += '<div class="letter-card" data-i="' + i + '">' +
+          '<div class="letter-big">' + escapeHtml(item.text) + '</div>' +
+          '<div class="letter-emoji">' + item.emoji + '</div>' +
+          '<div class="letter-word">' + escapeHtml(item.word) + '</div>' +
+          '</div>';
+      } else if(type === 'words'){
+        var sylls = item.syll.map(function(s,k){
+          var cls = ['syll-a','syll-b','syll-c','syll-d'][k % 4];
+          return '<span class="syll-part ' + cls + '">' + escapeHtml(s) + '</span>';
+        }).join('');
+        html += '<div class="letter-card word-card" data-i="' + i + '">' +
+          '<div class="letter-big">' + sylls + '</div>' +
+          '<div class="letter-emoji">' + item.emoji + '</div>' +
+          '</div>';
+      } else {
+        html += '<div class="letter-card sentence-card" data-i="' + i + '">' +
+          '<div class="letter-big">' + item.emoji + '&nbsp; ' + escapeHtml(item.text) + '</div>' +
+          '</div>';
+      }
+    });
+    html += '</div>';
+    html += '<button class="btn btn-coral btn-block" id="play-btn">¡A jugar! 🎮</button>';
+    content.innerHTML = html;
+
+    document.querySelectorAll('#intro-grid .letter-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        var i = parseInt(card.getAttribute('data-i'), 10);
+        var item = currentLevel.items[i];
+        introSeen[i] = true;
+        card.classList.add('seen');
+        if(!card.querySelector('.seen-badge')){
+          var badge = document.createElement('div');
+          badge.className = 'seen-badge';
+          badge.textContent = '✓';
+          card.appendChild(badge);
+        }
+        if(currentLevel.type === 'letters'){
+          speakSequence([item.text, item.word]);
+        } else if(currentLevel.type === 'words'){
+          speak(item.text);
+        } else {
+          speak(item.text, 0.8);
+        }
+      });
+    });
+
+    document.getElementById('play-btn').addEventListener('click', function(){
+      startGame();
+    });
+  }
+
+  /* ---------- Juego (rondas) ---------- */
+  function buildOptions(correctIdx){
+    var items = currentLevel.items;
+    var pool = items.map(function(it,i){ return i; }).filter(function(i){ return i !== correctIdx; });
+    pool = shuffle(pool).slice(0, Math.min(3, pool.length));
+    var optionIdxs = shuffle(pool.concat([correctIdx]));
+    return optionIdxs;
+  }
+
+  function startGame(){
+    var order = shuffle(currentLevel.items.map(function(it,i){ return i; }));
+    gameState = { order: order, round: 0, wrongAttempts: 0, correctFirstTry: 0, attemptedThisRound:false };
+    renderRound();
+  }
+
+  function renderRound(){
+    var total = gameState.order.length;
+    var pct = Math.round((gameState.round / total) * 100);
+    setLevelHeader('Ronda ' + (gameState.round+1) + ' de ' + total, pct);
+
+    var idx = gameState.order[gameState.round];
+    var item = currentLevel.items[idx];
+    var type = currentLevel.type;
+    gameState.attemptedThisRound = false;
+
+    var content = document.getElementById('level-content');
+    var html = '<div class="game-box">';
+    html += '<div class="round-counter">Ronda ' + (gameState.round+1) + ' de ' + total + '</div>';
+
+    if(type === 'letters'){
+      html += '<div class="prompt-emoji">' + item.emoji + '</div>';
+      html += '<div class="prompt-text">' + escapeHtml(item.word) + '</div>';
+      html += '<button class="speaker-btn" id="hear-btn">🔊 Escuchar</button>';
+      html += '<div class="question-label">¿Con qué sílaba empieza?</div>';
+    } else if(type === 'words'){
+      html += '<div class="prompt-emoji">' + item.emoji + '</div>';
+      html += '<button class="speaker-btn" id="hear-btn">🔊 Escuchar palabra</button>';
+      html += '<div class="question-label">¿Qué palabra escuchaste?</div>';
+    } else {
+      html += '<div class="prompt-text">' + escapeHtml(item.text) + '</div>';
+      html += '<button class="speaker-btn" id="hear-btn">🔊 Escuchar frase</button>';
+      html += '<div class="question-label">¿Qué dibujo va con la frase?</div>';
+    }
+
+    var optionIdxs = buildOptions(idx);
+    html += '<div class="options-grid" id="options-grid">';
+    optionIdxs.forEach(function(oi){
+      var opt = currentLevel.items[oi];
+      var label = type === 'letters' ? opt.text : (type === 'words' ? opt.text : opt.emoji);
+      html += '<button class="option-btn" data-idx="' + oi + '">' + escapeHtml(label) + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="feedback-msg" id="feedback-msg"></div>';
+    html += '</div>';
+
+    content.innerHTML = html;
+
+    document.getElementById('hear-btn').addEventListener('click', function(){
+      if(type === 'letters'){ speakSequence([item.text, item.word]); }
+      else if(type === 'words'){ speak(item.text); }
+      else { speak(item.text, 0.8); }
+    });
+    // Reproduce automáticamente al entrar a la ronda
+    if(type === 'letters'){ speakSequence([item.text, item.word]); }
+    else if(type === 'words'){ speak(item.text); }
+    else { speak(item.text, 0.8); }
+
+    document.querySelectorAll('#options-grid .option-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){ handleAnswer(btn, idx); });
+    });
+  }
+
+  function handleAnswer(btn, correctIdx){
+    var chosen = parseInt(btn.getAttribute('data-idx'), 10);
+    var feedback = document.getElementById('feedback-msg');
+    if(chosen === correctIdx){
+      btn.classList.add('correct');
+      document.querySelectorAll('#options-grid .option-btn').forEach(function(b){ b.disabled = true; });
+      feedback.className = 'feedback-msg good';
+      feedback.textContent = PRAISE[Math.floor(Math.random()*PRAISE.length)] + ' ' + '🎉';
+      playTone(true);
+      if(!gameState.attemptedThisRound){ gameState.correctFirstTry++; }
+      setTimeout(function(){
+        gameState.round++;
+        if(gameState.round >= gameState.order.length){
+          finishGame();
+        } else {
+          renderRound();
+        }
+      }, 1100);
+    } else {
+      btn.classList.add('wrong');
+      btn.disabled = true;
+      gameState.wrongAttempts++;
+      gameState.attemptedThisRound = true;
+      feedback.className = 'feedback-msg bad';
+      feedback.textContent = ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)] + ' 💪';
+      playTone(false);
+    }
+  }
+
+  function finishGame(){
+    var total = gameState.order.length;
+    var wrong = gameState.wrongAttempts;
+    var stars = wrong === 0 ? 3 : (wrong <= Math.ceil(total/2) ? 2 : 1);
+
+    var record = data.levels[currentLevel.id] || {};
+    var bestStars = Math.max(record.stars || 0, stars);
+    data.levels[currentLevel.id] = { completed:true, stars: bestStars };
+    saveData();
+
+    setLevelHeader('¡Nivel completado!', 100);
+    var content = document.getElementById('level-content');
+    var starsStr = '★★★'.slice(0,stars) + '☆☆☆'.slice(0, 3-stars);
+    var msg = stars === 3 ? '¡Perfecto!' : (stars === 2 ? '¡Muy bien hecho!' : '¡Lo lograste!');
+
+    var nextLevel = getLevel(currentLevel.id + 1);
+    var html = '<div class="summary-box">';
+    html += '<div class="summary-msg">' + msg + '</div>';
+    html += '<div class="summary-stars">' + starsStr + '</div>';
+    html += '<div class="summary-sub">Completaste "' + escapeHtml(currentLevel.title) + '"</div>';
+    html += '<div class="summary-actions">';
+    html += '<button class="btn btn-yellow btn-block" id="retry-btn">🔁 Repetir nivel</button>';
+    if(nextLevel){
+      html += '<button class="btn btn-teal btn-block" id="next-btn">Siguiente nivel →</button>';
+    }
+    html += '<button class="btn btn-outline btn-block" id="map-btn">🗺️ Volver al mapa</button>';
+    html += '</div></div>';
+    content.innerHTML = html;
+
+    if(stars >= 2){ launchConfetti(); }
+
+    document.getElementById('retry-btn').addEventListener('click', function(){ openLevel(currentLevel.id); });
+    document.getElementById('map-btn').addEventListener('click', function(){
+      renderMap();
+      showScreen('screen-map');
+    });
+    if(nextLevel){
+      document.getElementById('next-btn').addEventListener('click', function(){ openLevel(nextLevel.id); });
+    }
+  }
+
+  /* ================== AJUSTES ================== */
+  var modal = document.getElementById('settings-modal');
+  document.getElementById('gear-btn').addEventListener('click', function(){ modal.classList.remove('hidden'); });
+  document.getElementById('close-settings-btn').addEventListener('click', function(){ modal.classList.add('hidden'); });
+  document.getElementById('repeat-voice-btn').addEventListener('click', function(){
+    speak('Hola ' + data.name + '. Esta es mi voz.');
+  });
+  document.getElementById('change-name-btn').addEventListener('click', function(){
+    modal.classList.add('hidden');
+    nameInput.value = data.name === 'Peque' ? '' : data.name;
+    showScreen('screen-name');
+  });
+  document.getElementById('reset-progress-btn').addEventListener('click', function(){
+    var ok = window.confirm('¿Seguro que quieres borrar todo el progreso guardado?');
+    if(ok){
+      data = { name:data.name, levels:{} };
+      saveData();
+      modal.classList.add('hidden');
+      renderMap();
+      showScreen('screen-map');
+    }
+  });
+  modal.addEventListener('click', function(e){
+    if(e.target === modal){ modal.classList.add('hidden'); }
+  });
+
+  /* ================== INICIO ================== */
+  if(data.name){
+    nameInput.value = data.name;
+    renderMap();
+    showScreen('screen-map');
+  } else {
+    showScreen('screen-name');
+  }
+
+})();
+</script>
+</body>
+</html>
