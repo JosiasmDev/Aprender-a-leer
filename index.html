@@ -124,20 +124,21 @@
   .world-2 .world-banner{background:linear-gradient(120deg,var(--coral),var(--coral-dark));}
   .world-3 .world-banner{background:linear-gradient(120deg,var(--purple),var(--purple-dark));}
   .world-4 .world-banner{background:linear-gradient(120deg,var(--pink),var(--pink-dark));}
+  .world-banner .w-sticker{
+    position:absolute;font-size:1.3rem;opacity:0.85;z-index:1;
+    filter:drop-shadow(0 2px 0 rgba(0,0,0,0.08));
+  }
+  .world-banner .w-sticker.top-right{top:-10px;right:14px;}
+  .world-banner .w-sticker.bottom-left{bottom:-8px;left:60px;}
 
   .trail{position:relative;padding:10px 10px 4px;}
-  .trail::before{
-    content:"";position:absolute;top:0;bottom:0;left:50%;
-    width:8px;margin-left:-4px;border-radius:8px;z-index:0;
-    background-image:repeating-linear-gradient(to bottom, var(--trail-color,var(--grey)) 0 14px, transparent 14px 26px);
-    opacity:0.8;
-  }
-  .world-1 .trail{--trail-color:var(--teal);}
-  .world-2 .trail{--trail-color:var(--coral);}
-  .world-3 .trail{--trail-color:var(--purple);}
-  .world-4 .trail{--trail-color:var(--pink);}
+  .trail-svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 
-  .deco{position:absolute;font-size:1.4rem;opacity:0.55;z-index:0;pointer-events:none;}
+  .deco{position:absolute;font-size:1.5rem;opacity:0.6;z-index:0;pointer-events:none;}
+  .world-footer{
+    text-align:center;font-size:1.3rem;letter-spacing:10px;opacity:0.55;
+    margin:2px 0 8px;position:relative;z-index:1;
+  }
 
   .stone-row{position:relative;display:flex;align-items:center;margin-bottom:24px;z-index:1;}
   .stone-row.left{justify-content:flex-start;}
@@ -327,130 +328,130 @@
       {text:'o', word:'Oso', emoji:'🐻'},
       {text:'u', word:'Uva', emoji:'🍇'}
     ]},
-    { id:2, title:'Sílabas con M', subtitle:'ma me mi mo mu', icon:'👩', type:'letters', items:[
-      {text:'ma', word:'Mamá', emoji:'👩'},
-      {text:'me', word:'Mesa', emoji:'🪑'},
-      {text:'mi', word:'Miel', emoji:'🍯'},
-      {text:'mo', word:'Moto', emoji:'🛵'},
-      {text:'mu', word:'Muñeca', emoji:'🪆'}
-    ]},
-    { id:3, title:'Sílabas con P', subtitle:'pa pe pi po pu', icon:'🦆', type:'letters', items:[
-      {text:'pa', word:'Pato', emoji:'🦆'},
-      {text:'pe', word:'Pelota', emoji:'⚽'},
-      {text:'pi', word:'Piña', emoji:'🍍'},
-      {text:'po', word:'Pollo', emoji:'🐔'},
-      {text:'pu', word:'Puerta', emoji:'🚪'}
-    ]},
-    { id:4, title:'Sílabas con L', subtitle:'la le li lo lu', icon:'🦁', type:'letters', items:[
-      {text:'la', word:'Lápiz', emoji:'✏️'},
-      {text:'le', word:'León', emoji:'🦁'},
-      {text:'li', word:'Limón', emoji:'🍋'},
-      {text:'lo', word:'Loro', emoji:'🦜'},
-      {text:'lu', word:'Luna', emoji:'🌙'}
-    ]},
-    { id:5, title:'Sílabas con S', subtitle:'sa se si so su', icon:'🐸', type:'letters', items:[
-      {text:'sa', word:'Sapo', emoji:'🐸'},
-      {text:'se', word:'Semilla', emoji:'🌱'},
-      {text:'si', word:'Silla', emoji:'🪑'},
-      {text:'so', word:'Sol', emoji:'☀️'},
-      {text:'su', word:'Submarino', emoji:'🚤'}
-    ]},
-    { id:6, title:'Sílabas con T', subtitle:'ta te ti to tu', icon:'🐯', type:'letters', items:[
-      {text:'ta', word:'Taza', emoji:'☕'},
-      {text:'te', word:'Tetera', emoji:'🫖'},
-      {text:'ti', word:'Tigre', emoji:'🐯'},
-      {text:'to', word:'Tomate', emoji:'🍅'},
-      {text:'tu', word:'Tucán', emoji:'🦜'}
-    ]},
-    { id:7, title:'Sílabas con D', subtitle:'da de di do du', icon:'🦖', type:'letters', items:[
-      {text:'da', word:'Dado', emoji:'🎲'},
-      {text:'de', word:'Dedo', emoji:'👆'},
-      {text:'di', word:'Dinosaurio', emoji:'🦖'},
-      {text:'do', word:'Domingo', emoji:'📅'},
-      {text:'du', word:'Ducha', emoji:'🚿'}
-    ]},
-    { id:8, title:'Sílabas con N', subtitle:'na ne ni no nu', icon:'👃', type:'letters', items:[
-      {text:'na', word:'Nariz', emoji:'👃'},
-      {text:'ne', word:'Nevera', emoji:'🧊'},
-      {text:'ni', word:'Nido', emoji:'🪺'},
-      {text:'no', word:'Noche', emoji:'🌃'},
-      {text:'nu', word:'Nube', emoji:'☁️'}
-    ]},
-    { id:9, title:'Sílabas con C', subtitle:'ca co cu', icon:'🏠', type:'letters', items:[
-      {text:'ca', word:'Casa', emoji:'🏠'},
-      {text:'co', word:'Coco', emoji:'🥥'},
-      {text:'cu', word:'Cubo', emoji:'🧊'}
-    ]},
-    { id:10, title:'Sílabas con B', subtitle:'ba be bi bo bu', icon:'🦉', type:'letters', items:[
+    { id:2, title:'Sílabas con B', subtitle:'ba be bi bo bu', icon:'🦉', type:'letters', items:[
       {text:'ba', word:'Barco', emoji:'⛵'},
       {text:'be', word:'Beso', emoji:'💋'},
       {text:'bi', word:'Bicicleta', emoji:'🚲'},
       {text:'bo', word:'Bota', emoji:'🥾'},
       {text:'bu', word:'Búho', emoji:'🦉'}
     ]},
-    { id:11, title:'Sílabas con F', subtitle:'fa fe fi fo fu', icon:'🦭', type:'letters', items:[
+    { id:3, title:'Sílabas con C', subtitle:'ca co cu', icon:'🏠', type:'letters', items:[
+      {text:'ca', word:'Casa', emoji:'🏠'},
+      {text:'co', word:'Coco', emoji:'🥥'},
+      {text:'cu', word:'Cubo', emoji:'🧊'}
+    ]},
+    { id:4, title:'Sílabas con CH', subtitle:'cha chi cho chu', icon:'🍫', type:'letters', items:[
+      {text:'cha', word:'Chaleco', emoji:'🦺'},
+      {text:'chi', word:'Chicle', emoji:'🍬'},
+      {text:'cho', word:'Chocolate', emoji:'🍫'},
+      {text:'chu', word:'Chupete', emoji:'🍼'}
+    ]},
+    { id:5, title:'Sílabas con D', subtitle:'da de di do du', icon:'🦖', type:'letters', items:[
+      {text:'da', word:'Dado', emoji:'🎲'},
+      {text:'de', word:'Dedo', emoji:'👆'},
+      {text:'di', word:'Dinosaurio', emoji:'🦖'},
+      {text:'do', word:'Domingo', emoji:'📅'},
+      {text:'du', word:'Ducha', emoji:'🚿'}
+    ]},
+    { id:6, title:'Sílabas con F', subtitle:'fa fe fi fo fu', icon:'🦭', type:'letters', items:[
       {text:'fa', word:'Falda', emoji:'👗'},
       {text:'fe', word:'Feliz', emoji:'😊'},
       {text:'fi', word:'Fideo', emoji:'🍜'},
       {text:'fo', word:'Foca', emoji:'🦭'},
       {text:'fu', word:'Fuego', emoji:'🔥'}
     ]},
-    { id:12, title:'Sílabas con G', subtitle:'ga go gu', icon:'🐱', type:'letters', items:[
+    { id:7, title:'Sílabas con G', subtitle:'ga go gu', icon:'🐱', type:'letters', items:[
       {text:'ga', word:'Gato', emoji:'🐱'},
       {text:'go', word:'Gorro', emoji:'🧢'},
       {text:'gu', word:'Guante', emoji:'🧤'}
     ]},
-    { id:13, title:'Sílabas con J', subtitle:'ja je ji jo ju', icon:'🦒', type:'letters', items:[
+    { id:8, title:'Sílabas con H', subtitle:'ha he hi ho hu', icon:'🧚', type:'letters', items:[
+      {text:'ha', word:'Hada', emoji:'🧚'},
+      {text:'he', word:'Helado', emoji:'🍦'},
+      {text:'hi', word:'Hipopótamo', emoji:'🦛'},
+      {text:'ho', word:'Hormiga', emoji:'🐜'},
+      {text:'hu', word:'Huevo', emoji:'🥚'}
+    ]},
+    { id:9, title:'Sílabas con J', subtitle:'ja je ji jo ju', icon:'🦒', type:'letters', items:[
       {text:'ja', word:'Jabón', emoji:'🧼'},
       {text:'je', word:'Jefe', emoji:'🕴️'},
       {text:'ji', word:'Jirafa', emoji:'🦒'},
       {text:'jo', word:'Joya', emoji:'💍'},
       {text:'ju', word:'Jugo', emoji:'🧃'}
     ]},
-    { id:14, title:'Sílabas con R', subtitle:'ra re ri ro ru', icon:'🐸', type:'letters', items:[
+    { id:10, title:'Sílabas con L', subtitle:'la le li lo lu', icon:'🦁', type:'letters', items:[
+      {text:'la', word:'Lápiz', emoji:'✏️'},
+      {text:'le', word:'León', emoji:'🦁'},
+      {text:'li', word:'Limón', emoji:'🍋'},
+      {text:'lo', word:'Loro', emoji:'🦜'},
+      {text:'lu', word:'Luna', emoji:'🌙'}
+    ]},
+    { id:11, title:'Sílabas con LL', subtitle:'lla llo llu', icon:'🔑', type:'letters', items:[
+      {text:'lla', word:'Llave', emoji:'🔑'},
+      {text:'llo', word:'Pollo', emoji:'🐔'},
+      {text:'llu', word:'Lluvia', emoji:'🌧️'}
+    ]},
+    { id:12, title:'Sílabas con M', subtitle:'ma me mi mo mu', icon:'👩', type:'letters', items:[
+      {text:'ma', word:'Mamá', emoji:'👩'},
+      {text:'me', word:'Mesa', emoji:'🪑'},
+      {text:'mi', word:'Miel', emoji:'🍯'},
+      {text:'mo', word:'Moto', emoji:'🛵'},
+      {text:'mu', word:'Muñeca', emoji:'🪆'}
+    ]},
+    { id:13, title:'Sílabas con N', subtitle:'na ne ni no nu', icon:'👃', type:'letters', items:[
+      {text:'na', word:'Nariz', emoji:'👃'},
+      {text:'ne', word:'Nevera', emoji:'🧊'},
+      {text:'ni', word:'Nido', emoji:'🪺'},
+      {text:'no', word:'Noche', emoji:'🌃'},
+      {text:'nu', word:'Nube', emoji:'☁️'}
+    ]},
+    { id:14, title:'Sílabas con Ñ', subtitle:'ño ñu', icon:'🛁', type:'letters', items:[
+      {text:'ño', word:'Baño', emoji:'🛁'},
+      {text:'ñu', word:'Ñu', emoji:'🐃'}
+    ]},
+    { id:15, title:'Sílabas con P', subtitle:'pa pe pi po pu', icon:'🦆', type:'letters', items:[
+      {text:'pa', word:'Pato', emoji:'🦆'},
+      {text:'pe', word:'Pelota', emoji:'⚽'},
+      {text:'pi', word:'Piña', emoji:'🍍'},
+      {text:'po', word:'Pollo', emoji:'🐔'},
+      {text:'pu', word:'Puerta', emoji:'🚪'}
+    ]},
+    { id:16, title:'Sílabas con R', subtitle:'ra re ri ro ru', icon:'🐸', type:'letters', items:[
       {text:'ra', word:'Rana', emoji:'🐸'},
       {text:'re', word:'Reloj', emoji:'⏰'},
       {text:'ri', word:'Risa', emoji:'😄'},
       {text:'ro', word:'Robot', emoji:'🤖'},
       {text:'ru', word:'Rueda', emoji:'🛞'}
     ]},
-    { id:15, title:'Sílabas con V', subtitle:'va ve vi vo', icon:'🐄', type:'letters', items:[
+    { id:17, title:'Sílabas con S', subtitle:'sa se si so su', icon:'☀️', type:'letters', items:[
+      {text:'sa', word:'Sapo', emoji:'🐸'},
+      {text:'se', word:'Semilla', emoji:'🌱'},
+      {text:'si', word:'Silla', emoji:'🪑'},
+      {text:'so', word:'Sol', emoji:'☀️'},
+      {text:'su', word:'Submarino', emoji:'🚤'}
+    ]},
+    { id:18, title:'Sílabas con T', subtitle:'ta te ti to tu', icon:'🐯', type:'letters', items:[
+      {text:'ta', word:'Taza', emoji:'☕'},
+      {text:'te', word:'Tetera', emoji:'🫖'},
+      {text:'ti', word:'Tigre', emoji:'🐯'},
+      {text:'to', word:'Tomate', emoji:'🍅'},
+      {text:'tu', word:'Tucán', emoji:'🦜'}
+    ]},
+    { id:19, title:'Sílabas con V', subtitle:'va ve vi vo', icon:'🐄', type:'letters', items:[
       {text:'va', word:'Vaca', emoji:'🐄'},
       {text:'ve', word:'Vela', emoji:'🕯️'},
       {text:'vi', word:'Violín', emoji:'🎻'},
       {text:'vo', word:'Volcán', emoji:'🌋'}
     ]},
-    { id:16, title:'Sílabas con Y', subtitle:'ya ye yo', icon:'⛵', type:'letters', items:[
+    { id:20, title:'Sílabas con Y', subtitle:'ya ye yo', icon:'⛵', type:'letters', items:[
       {text:'ya', word:'Yate', emoji:'⛵'},
       {text:'ye', word:'Yeso', emoji:'🩹'},
       {text:'yo', word:'Yogur', emoji:'🍦'}
     ]},
-    { id:17, title:'Sílabas con CH', subtitle:'cha chi cho chu', icon:'🍫', type:'letters', items:[
-      {text:'cha', word:'Chaleco', emoji:'🦺'},
-      {text:'chi', word:'Chicle', emoji:'🍬'},
-      {text:'cho', word:'Chocolate', emoji:'🍫'},
-      {text:'chu', word:'Chupete', emoji:'🍼'}
-    ]},
-    { id:18, title:'Sílabas con LL', subtitle:'lla llo llu', icon:'🔑', type:'letters', items:[
-      {text:'lla', word:'Llave', emoji:'🔑'},
-      {text:'llo', word:'Pollo', emoji:'🐔'},
-      {text:'llu', word:'Lluvia', emoji:'🌧️'}
-    ]},
-    { id:19, title:'Sílabas con Ñ', subtitle:'ño ñu', icon:'🛁', type:'letters', items:[
-      {text:'ño', word:'Baño', emoji:'🛁'},
-      {text:'ñu', word:'Ñu', emoji:'🐃'}
-    ]},
-    { id:20, title:'Sílabas con Z', subtitle:'za zo zu', icon:'👟', type:'letters', items:[
+    { id:21, title:'Sílabas con Z', subtitle:'za zo zu', icon:'👟', type:'letters', items:[
       {text:'za', word:'Zapato', emoji:'👟'},
       {text:'zo', word:'Zorro', emoji:'🦊'},
       {text:'zu', word:'Zumo', emoji:'🧃'}
-    ]},
-    { id:21, title:'Sílabas con H', subtitle:'ha he hi ho hu', icon:'🧚', type:'letters', items:[
-      {text:'ha', word:'Hada', emoji:'🧚'},
-      {text:'he', word:'Helado', emoji:'🍦'},
-      {text:'hi', word:'Hipopótamo', emoji:'🦛'},
-      {text:'ho', word:'Hormiga', emoji:'🐜'},
-      {text:'hu', word:'Huevo', emoji:'🥚'}
     ]},
     { id:22, title:'Mis primeras palabras', subtitle:'Leer palabras completas', icon:'📖', type:'words', items:[
       {text:'mamá', syll:['ma','má'], emoji:'👩'},
@@ -490,10 +491,10 @@
 
   /* Agrupación en "mundos" para un camino más bonito y ordenado */
   var WORLDS = [
-    { key:'w1', title:'Mundo de las vocales', subtitle:'El primer paso de la aventura', icon:'🌈', from:1, to:1, deco:['☁️','✨','🌤️'] },
-    { key:'w2', title:'Bosque de las sílabas fáciles', subtitle:'M · P · L · S · T · D · N', icon:'🌳', from:2, to:8, deco:['🍃','🌿','🦋','🌸'] },
-    { key:'w3', title:'Montaña de las sílabas', subtitle:'C · B · F · G · J · R · V · Y · CH · LL · Ñ · Z · H', icon:'⛰️', from:9, to:21, deco:['⭐','💎','🪨','✨'] },
-    { key:'w4', title:'Castillo de las palabras', subtitle:'Palabras y frases completas', icon:'🏰', from:22, to:23, deco:['👑','🎉','🌟'] }
+    { key:'w1', title:'Mundo de las vocales', subtitle:'El primer paso de la aventura', icon:'🌈', from:1, to:1, deco:['☁️','✨','🌤️','🌈'], footer:'☁️ 🌤️ ☁️ 🌥️ ☁️' },
+    { key:'w2', title:'Bosque de las sílabas fáciles', subtitle:'B · C · CH · D · F · G · H (orden alfabético)', icon:'🌳', from:2, to:8, deco:['🍃','🌿','🦋','🌸','🐞','🍄'], footer:'🌿 🌳 🌿 🌸 🌳 🌿' },
+    { key:'w3', title:'Montaña de las sílabas', subtitle:'J · L · LL · M · N · Ñ · P · R · S · T · V · Y · Z (orden alfabético)', icon:'⛰️', from:9, to:21, deco:['⭐','💎','🪨','✨','🦅','❄️'], footer:'⛰️ 🏔️ ⛰️ 🪨 ⛰️ 🏔️' },
+    { key:'w4', title:'Castillo de las palabras', subtitle:'Palabras y frases completas', icon:'🏰', from:22, to:23, deco:['👑','🎉','🌟','🎊'], footer:'🎉 👑 🎊 🌟 🎉 👑' }
   ];
 
   var PRAISE = ['¡Muy bien!','¡Genial!','¡Lo lograste!','¡Estupendo!','¡Eres una estrella!','¡Perfecto!','¡Bravo!'];
@@ -627,6 +628,34 @@
     return a;
   }
 
+  /* ================== CURVA DEL CAMINO (SVG) ================== */
+  var WORLD_COLORS = { w1:'#2C8A81', w2:'#E06A3C', w3:'#6E43A6', w4:'#E14E80' };
+
+  function buildTrailSVG(rows, colorHex){
+    if(rows < 2){
+      // un único punto: dibuja un pequeño rizo decorativo
+      return '<svg class="trail-svg" viewBox="0 0 100 100" preserveAspectRatio="none">' +
+        '<path d="M50,0 C70,25 30,45 50,70 C60,85 45,95 50,100" fill="none" stroke="' + colorHex + '" ' +
+        'stroke-width="6" stroke-linecap="round" stroke-dasharray="1 13" opacity="0.75"/></svg>';
+    }
+    var segH = 100;
+    var totalH = rows * segH;
+    var pts = [];
+    for(var i=0;i<rows;i++){
+      pts.push({ x: (i % 2 === 0) ? 20 : 80, y: i*segH + segH/2 });
+    }
+    var d = 'M' + pts[0].x + ',' + pts[0].y;
+    for(var i=1;i<pts.length;i++){
+      var prev = pts[i-1], cur = pts[i];
+      var cx1 = prev.x, cy1 = prev.y + segH*0.55;
+      var cx2 = cur.x, cy2 = cur.y - segH*0.55;
+      d += ' C' + cx1 + ',' + cy1 + ' ' + cx2 + ',' + cy2 + ' ' + cur.x + ',' + cur.y;
+    }
+    return '<svg class="trail-svg" viewBox="0 0 100 ' + totalH + '" preserveAspectRatio="none">' +
+      '<path d="' + d + '" fill="none" stroke="' + colorHex + '" stroke-width="7" ' +
+      'stroke-linecap="round" stroke-dasharray="2 16" opacity="0.8"/></svg>';
+  }
+
   /* ================== NAVEGACIÓN DE PANTALLAS ================== */
   function showScreen(id){
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -664,13 +693,19 @@
         '<div class="w-text">' +
           '<div class="w-title">' + escapeHtml(world.title) + '</div>' +
           '<div class="w-sub">' + escapeHtml(world.subtitle) + '</div>' +
-        '</div>';
+        '</div>' +
+        '<div class="w-sticker top-right">' + (world.deco ? world.deco[0] : '✨') + '</div>' +
+        '<div class="w-sticker bottom-left">' + (world.deco ? world.deco[1] : '✨') + '</div>';
       block.appendChild(banner);
 
       var trail = document.createElement('div');
       trail.className = 'trail';
 
       var levelsInWorld = LEVELS.filter(function(l){ return l.id >= world.from && l.id <= world.to; });
+
+      // curva de fondo del camino
+      trail.innerHTML = buildTrailSVG(levelsInWorld.length, WORLD_COLORS[world.key] || '#C9C2D6');
+
       levelsInWorld.forEach(function(level, idx){
         var row = document.createElement('div');
         row.className = 'stone-row ' + (idx % 2 === 0 ? 'left' : 'right');
@@ -697,19 +732,42 @@
         row.appendChild(stone);
         trail.appendChild(row);
 
-        // decoraciones ocasionales entre piedras
+        // decoraciones variadas alrededor de cada tramo del camino
         if(idx < levelsInWorld.length - 1 && world.deco && world.deco.length){
-          var dRow = document.createElement('div');
-          dRow.style.textAlign = idx % 2 === 0 ? 'right' : 'left';
-          dRow.style.fontSize = '1.3rem';
-          dRow.style.margin = '-14px 26px 4px';
-          dRow.style.opacity = '0.7';
-          dRow.textContent = world.deco[idx % world.deco.length];
-          trail.appendChild(dRow);
+          var side = idx % 2 === 0 ? 'right' : 'left';
+          var otherSide = side === 'right' ? 'left' : 'right';
+          var deco1 = document.createElement('div');
+          deco1.className = 'deco';
+          deco1.style[otherSide] = (18 + (idx % 3) * 6) + 'px';
+          deco1.style.top = '-10px';
+          deco1.style.transform = 'rotate(' + ((idx % 2 === 0 ? -1 : 1) * (8 + (idx % 3) * 5)) + 'deg)';
+          deco1.style.fontSize = (1.2 + (idx % 3) * 0.15) + 'rem';
+          deco1.textContent = world.deco[idx % world.deco.length];
+
+          var deco2 = document.createElement('div');
+          deco2.className = 'deco';
+          deco2.style[side] = (30 + (idx % 2) * 20) + 'px';
+          deco2.style.top = '34px';
+          deco2.style.transform = 'rotate(' + ((idx % 2 === 0 ? 1 : -1) * (6 + (idx % 4) * 4)) + 'deg)';
+          deco2.style.fontSize = '1.1rem';
+          deco2.style.opacity = '0.45';
+          deco2.textContent = world.deco[(idx+2) % world.deco.length];
+
+          row.style.position = 'relative';
+          row.appendChild(deco1);
+          row.appendChild(deco2);
         }
       });
 
       block.appendChild(trail);
+
+      if(world.footer){
+        var footer = document.createElement('div');
+        footer.className = 'world-footer';
+        footer.textContent = world.footer;
+        block.appendChild(footer);
+      }
+
       container.appendChild(block);
     });
 
